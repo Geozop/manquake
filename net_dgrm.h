@@ -29,3 +29,5 @@ int			Datagram_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data);
 qboolean	Datagram_CanSendMessage (qsocket_t *sock);
 void		Datagram_Close (qsocket_t *sock);
 void		Datagram_Shutdown (void);
+extern void BANLog_DumpTree(banlog_t *root, FILE *f);
+extern int unfun_match(char *s1, char *s2);

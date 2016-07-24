@@ -22,3 +22,7 @@ scitech/
 *.obj
 *db
 .suo
+/Manquake/Debug
+/Manquake/Manquake/Manquake.vcxproj.user
+*.aps
+*.res

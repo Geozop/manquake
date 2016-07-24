@@ -110,7 +110,7 @@ extern	cvar_t ip_visible2;
 extern	cvar_t ip_hidden2;
 
 // banlog.c
-extern banlog_head;
+extern banlog_t *banlog_head;
 extern banlog_next;
 
 void NET_Ban_f (void)

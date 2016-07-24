@@ -274,7 +274,9 @@ SYSTEM IO
 ===============================================================================
 */
 
-#ifndef _M_IX86
+/* #ifndef _M_IX86
+Zop: this flag means "assembly functions provided" but we're not using assembly
+*/
 
 void Sys_SetFPCW (void)
 {
@@ -292,7 +294,7 @@ void MaskExceptions (void)
 {
 }
 
-#endif
+
 
 /*
 ================
@@ -339,11 +341,6 @@ void Sys_Init (void)
 		(vinfo.dwPlatformId == VER_PLATFORM_WIN32s))
 	{
 		Sys_Error ("WinQuake requires at least Win95 or NT 4.0");
-	}
-
-	// Initialize Winsock
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-		Sys_Error ("Winsock: WSAStartup failed");
 	}
 }
 
