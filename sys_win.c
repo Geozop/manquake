@@ -39,7 +39,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 int			starttime;
 qboolean	ActiveApp, Minimized;
-qboolean	WinNT;
 
 static double		pfreq;
 static double		curtime = 0.0;
@@ -305,6 +304,7 @@ void Sys_Init (void)
 	LARGE_INTEGER	PerformanceFreq;
 	unsigned int	lowpart, highpart;
 	OSVERSIONINFO	vinfo;
+	WSADATA wsaData;
 
 	MaskExceptions ();
 	Sys_SetFPCW ();
@@ -341,10 +341,10 @@ void Sys_Init (void)
 		Sys_Error ("WinQuake requires at least Win95 or NT 4.0");
 	}
 
-	if (vinfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
-		WinNT = true;
-	else
-		WinNT = false;
+	// Initialize Winsock
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+		Sys_Error ("Winsock: WSAStartup failed");
+	}
 }
 
 

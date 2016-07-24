@@ -17,4 +17,8 @@ scitech/
 
 # perl script
 
-find.log
+*.tlog
+*.log
+*.obj
+*db
+.suo

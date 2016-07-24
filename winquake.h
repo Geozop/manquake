@@ -26,7 +26,6 @@ extern	HINSTANCE	global_hInstance;
 extern	int			global_nCmdShow;
 
 extern qboolean		ActiveApp, Minimized;
-extern qboolean	WinNT;
 extern qboolean	winsock_lib_initialized;
 
 extern HWND		hwnd_dialog;
