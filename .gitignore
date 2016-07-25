@@ -23,6 +23,7 @@ scitech/
 *db
 .suo
 /Manquake/Debug
-/Manquake/Manquake/Manquake.vcxproj.user
+Manquake.vcxproj.user
 *.aps
 *.res
+/Manquake/Binary

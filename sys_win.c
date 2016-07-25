@@ -301,21 +301,21 @@ void MaskExceptions (void)
 Sys_Init
 ================
 */
-void Sys_Init (void)
+void Sys_Init(void)
 {
 	LARGE_INTEGER	PerformanceFreq;
 	unsigned int	lowpart, highpart;
 	OSVERSIONINFO	vinfo;
 	WSADATA wsaData;
 
-	MaskExceptions ();
-	Sys_SetFPCW ();
+	MaskExceptions();
+	Sys_SetFPCW();
 
-	if (!QueryPerformanceFrequency (&PerformanceFreq))
-		Sys_Error ("No hardware timer available");
+	if (!QueryPerformanceFrequency(&PerformanceFreq))
+		Sys_Error("No hardware timer available");
 
-// get 32 out of the 64 time bits such that we have around
-// 1 microsecond resolution
+	// get 32 out of the 64 time bits such that we have around
+	// 1 microsecond resolution
 	lowpart = (unsigned int)PerformanceFreq.LowPart;
 	highpart = (unsigned int)PerformanceFreq.HighPart;
 	lowshift = 0;
@@ -330,8 +330,9 @@ void Sys_Init (void)
 
 	pfreq = 1.0 / (double)lowpart;
 
-	Sys_InitFloatTime ();
-
+	Sys_InitFloatTime();
+}
+/*
 	vinfo.dwOSVersionInfoSize = sizeof(vinfo);
 
 	if (!GetVersionEx (&vinfo))
@@ -343,7 +344,7 @@ void Sys_Init (void)
 		Sys_Error ("WinQuake requires at least Win95 or NT 4.0");
 	}
 }
-
+*/
 
 void Sys_Error (char *error, ...)
 {
@@ -784,6 +785,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		Sys_Error ("Couldn't create dedicated server console");
 	}
 
+	// Zop: using Sys_Error() before these lines will not actually display an error (Windows)
 	hinput = GetStdHandle (STD_INPUT_HANDLE);
 	houtput = GetStdHandle (STD_OUTPUT_HANDLE);
 
