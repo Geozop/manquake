@@ -333,6 +333,9 @@ void Sys_Init(void)
 	Sys_InitFloatTime();
 }
 /*
+Zop: Visual Studio 2015 doesn't allow GetVersionEx().
+I bet running manquake on Win 3.1/NT 3.5 will crash, rather than print this error
+
 	vinfo.dwOSVersionInfoSize = sizeof(vinfo);
 
 	if (!GetVersionEx (&vinfo))

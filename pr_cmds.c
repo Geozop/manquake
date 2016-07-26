@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 
 #include <time.h>	// Slot Zero 3.50-1  Return time as string.
+#include "pr_cmds.h"
 
 #define	RETURN_EDICT(e) (((int *)pr_globals)[OFS_RETURN] = EDICT_TO_PROG(e))
 
@@ -1745,6 +1746,34 @@ void PF_stof (void)
 		G_FLOAT(OFS_RETURN) = atof(s);
 }
 
+/*
+=================
+PF_achievement
+
+float achievement(entity, string)
+=================
+*/
+void PF_achievement(void)
+{
+	char	*s;
+	int		entnum;
+	edict_t	*ent;
+
+	entnum = G_EDICTNUM(OFS_PARM0);
+	s = PF_VarString(1);
+
+	if (entnum < 1 || entnum > svs.maxclients)
+	{
+		Con_Printf("tried to give achievement '%s' to a non-client\n", s);
+		return;
+	}
+
+	ent = G_EDICT(OFS_PARM0);
+	SV_BroadcastPrintf("Бгийеценеофє %s, %s\n", pr_strings + ent->v.netname, s); // "Achievement: %s, %s"
+
+	// return 1 if new achievement for client?			G_FLOAT(OFS_RETURN) = sqrt(G_FLOAT(OFS_PARM0));
+}
+
 builtin_t pr_builtin[] =
 {
 PF_Fixme,
@@ -1798,7 +1827,7 @@ PF_nextent,
 PF_particle,
 PF_changeyaw,
 PF_Fixme,
-PF_vectoangles,
+PF_vectoangles, // = #51
 
 PF_WriteByte,
 PF_WriteChar,
@@ -1837,7 +1866,9 @@ PF_precache_file,
 PF_setspawnparms,
 PF_Fixme,
 PF_Fixme,
-PF_stof
+PF_stof,
+PF_Fixme, // = #82 void multicast(vector where, float set) -- used in qw
+PF_achievement,
 };
 
 builtin_t *pr_builtins = pr_builtin;
