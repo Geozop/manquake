@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "winquake.h"
 #include "errno.h"
 #include "resource.h"
-#include "conproc.h"
 
 // JPG 3.30 - need these for synchronization
 #include <fcntl.h>
@@ -48,11 +47,6 @@ static qboolean		sc_return_on_enter = false;
 HANDLE				hinput, houtput;
 
 static char			*tracking_tag = "Clams & Mooses";
-
-static HANDLE	tevent;
-static HANDLE	hFile;
-static HANDLE	heventParent;
-static HANDLE	heventChild;
 
 void MaskExceptions (void);
 void Sys_InitFloatTime (void);
@@ -372,10 +366,6 @@ void Sys_Error (char *error, ...)
 	dpvsnprintf (text, sizeof(text), error, argptr);
 	va_end (argptr);
 
-	va_start (argptr, error);
-	dpvsnprintf (text, sizeof(text), error, argptr);
-	va_end (argptr);
-
 	dpsnprintf (text2, sizeof(text2), "ERROR: %s\n", text);
 	WriteFile (houtput, text5, strlen (text5), &dummy, NULL);
 	WriteFile (houtput, text4, strlen (text4), &dummy, NULL);
@@ -394,13 +384,6 @@ void Sys_Error (char *error, ...)
 	{
 		in_sys_error1 = 1;
 		Host_Shutdown ();
-	}
-
-// shut down QHOST hooks if necessary
-	if (!in_sys_error2)
-	{
-		in_sys_error2 = 1;
-		DeinitConProc ();
 	}
 
 	exit (1);
@@ -441,13 +424,7 @@ void Sys_Quit (void)
 {
 	Host_Shutdown();
 
-	if (tevent)
-		CloseHandle (tevent);
-
 	FreeConsole ();
-
-// shut down QHOST hooks if necessary
-	DeinitConProc ();
 
 	// JPG - added this to see if it would fix the strange running out of system
 	// memory after running quake multiple times
@@ -649,27 +626,6 @@ void Sys_SendKeyEvents (void)
 	}
 }
 
-
-/*
-==============================================================================
-
- WINDOWS CRAP
-
-==============================================================================
-*/
-
-
-/*
-==================
-WinMain
-==================
-*/
-void SleepUntilInput (int time)
-{
-	MsgWaitForMultipleObjects(1, &tevent, FALSE, time, QS_ALLINPUT);
-}
-
-
 /*
 ==================
 WinMain
@@ -778,11 +734,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	Sys_PageIn (parms.membase, parms.memsize);
 
-	tevent = CreateEvent(NULL, FALSE, FALSE, NULL);
-
-	if (!tevent)
-		Sys_Error ("Couldn't create event");
-
 	if (!AllocConsole ())
 	{
 		Sys_Error ("Couldn't create dedicated server console");
@@ -791,27 +742,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	// Zop: using Sys_Error() before these lines will not actually display an error (Windows)
 	hinput = GetStdHandle (STD_INPUT_HANDLE);
 	houtput = GetStdHandle (STD_OUTPUT_HANDLE);
-
-	// give QHOST a chance to hook into the console
-	if ((t = COM_CheckParm ("-HFILE")) > 0)
-	{
-		if (t < com_argc)
-			hFile = (HANDLE)atoi (com_argv[t+1]);
-	}
-
-	if ((t = COM_CheckParm ("-HPARENT")) > 0)
-	{
-		if (t < com_argc)
-			heventParent = (HANDLE)atoi (com_argv[t+1]);
-	}
-
-	if ((t = COM_CheckParm ("-HCHILD")) > 0)
-	{
-		if (t < com_argc)
-			heventChild = (HANDLE)atoi (com_argv[t+1]);
-	}
-
-	InitConProc (hFile, heventParent, heventChild);
 
 	Sys_Init ();
 	Sys_Printf ("Host_Init\n");

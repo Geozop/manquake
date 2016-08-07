@@ -152,7 +152,6 @@
     <ClCompile Include="..\banlog.c" />
     <ClCompile Include="..\cmd.c" />
     <ClCompile Include="..\common.c" />
-    <ClCompile Include="..\conproc.c" />
     <ClCompile Include="..\console.c" />
     <ClCompile Include="..\crc.c" />
     <ClCompile Include="..\cvar.c" />

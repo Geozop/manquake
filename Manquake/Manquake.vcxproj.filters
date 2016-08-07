@@ -24,9 +24,6 @@
     <ClCompile Include="..\common.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\conproc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\console.c">
       <Filter>Source Files</Filter>
     </ClCompile>
